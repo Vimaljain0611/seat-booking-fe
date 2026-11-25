@@ -3,7 +3,7 @@ import { getSeats, seatAction, socketUrl } from './api';
 import type { Seat } from './types';
 
 export default function App() {
-  const [seats, setSeats] = useState<Seat[]>([]), [userId, setUserId] = useState('user-1'), [status, setStatus] = useState<'connected'|'reconnecting'>('reconnecting'), [error, setError] = useState(''), [now, setNow] = useState(Date.now());
+  const [seats, setSeats] = useState<Seat[]>([]), [userId, setUserId] = useState<string>(() => `user-${crypto.randomUUID().slice(0, 8)}`), [status, setStatus] = useState<'connected'|'reconnecting'>('reconnecting'), [error, setError] = useState(''), [now, setNow] = useState(Date.now());
   const refresh = useCallback(async () => { try { setSeats(await getSeats()); } catch (e) { setError(e instanceof Error ? e.message : 'Unable to load seats.'); } }, []);
   useEffect(() => { void refresh(); const timer = window.setInterval(() => setNow(Date.now()), 250); return () => clearInterval(timer); }, [refresh]);
   useEffect(() => {
